@@ -58,44 +58,44 @@ public:
 class FileUtil
 {
 public:
-    static void SetWorkingDir(std::wstring&& dir)
+    static void SetWorkingDir(std::string&& dir)
     {
         workingDir = dir;
     }
 
-    static std::wstring WorkingDir()
+    static std::string WorkingDir()
     {
-        return (!workingDir.empty() ? workingDir : std::filesystem::current_path().c_str()) + LR"(\)";
+        return (!workingDir.empty() ? workingDir : std::filesystem::current_path().c_str()) + "(\)";
     }
 
-    static std::wstring UnitTestDir()
+    static std::string UnitTestDir()
     {
-        return WorkingDir() + LR"(TestData\)";
+        return WorkingDir() + "(TestData\)";
     }
 
-    static std::wstring ResultsDir()
+    static std::string ResultsDir()
     {
-        return WorkingDir() + std::wstring(LR"(Results\)");
+        return WorkingDir() + std::string("(Results\)");
     }
 
-    static std::wstring PartialsDir()
+    static std::string PartialsDir()
     {
-        return FileUtil::ResultsDir() + LR"(partials\)";
+        return FileUtil::ResultsDir() + "(partials\)";
     }
 
-    static std::wstring ScoreVarDir()
+    static std::string ScoreVarDir()
     {
-        return FileUtil::ResultsDir() + LR"(scoreVariants\)";
+        return FileUtil::ResultsDir() + "(scoreVariants\)";
     }
 
-    static void ClearFile(const std::wstring& filename)
+    static void ClearFile(const std::string& filename)
     {
         std::ofstream outFile;
         outFile.open(filename, std::ofstream::out | std::ofstream::trunc);
         outFile.close();
     }
 
-    static void AppendToFile(const std::wstring& filename, const std::string& text)
+    static void AppendToFile(const std::string& filename, const std::string& text)
     {
         std::ofstream outFile;
         outFile.open(filename, std::ofstream::out | std::ofstream::app);
@@ -103,16 +103,8 @@ public:
         outFile.close();
     }
 
-    static void AppendToFile(const std::wstring& filename, const std::wstring& text)
-    {
-        std::wofstream outFile;
-        outFile.open(filename, std::wofstream::out | std::wofstream::app);
-        outFile << text.c_str() << std::endl;
-        outFile.close();
-    }
-
 private:
-    static std::wstring workingDir;
+    static std::string workingDir;
 };
 
 class Log
@@ -120,16 +112,12 @@ class Log
 public:
     static void Clear()
     {
-        FileUtil::ClearFile(FileUtil::ResultsDir() + L"Output.txt");
+        FileUtil::ClearFile(FileUtil::ResultsDir() + "Output.txt");
     }
 
     static void Write(const std::string& text)
     {
-        FileUtil::AppendToFile(FileUtil::ResultsDir() + L"Output.txt", text);
+        FileUtil::AppendToFile(FileUtil::ResultsDir() + "Output.txt", text);
     }
 
-    static void Write(const std::wstring& text)
-    {
-        FileUtil::AppendToFile(FileUtil::ResultsDir() + L"Output.txt", text);
-    }
 };

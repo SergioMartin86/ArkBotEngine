@@ -13,22 +13,21 @@
 #include <unordered_map>
 
 #define NOMINMAX
-#include <Windows.h>
 
 void EvalOp::Evaluate(const GameState& state, EvalState& eval)
 {
-    auto title = L"Level " + std::to_wstring(state.level) + L"   Mask " + eval.bounceMask;
+    auto title = "Level " + std::to_string(state.level) + "   Mask " + eval.bounceMask;
     if (eval.testSinglePaddlePos)
     {
-        title += L"   Position " + std::to_wstring(eval.testSinglePaddlePos);
+        title += "   Position " + std::to_string(eval.testSinglePaddlePos);
     }
 
     if (eval.skipToDepth != 0)
     {
-        title += L"   Start depth " + std::to_wstring(eval.skipToDepth) + L" (frame " + std::to_wstring(eval.skipToFrame) + L")";
+        title += "   Start depth " + std::to_string(eval.skipToDepth) + " (frame " + std::to_string(eval.skipToFrame) + ")";
     }
 
-    ::SetConsoleTitle(title.c_str());
+    // ::SetConsoleTitle(title.c_str());
 
     if (eval.timeLimit != 0)
     {
@@ -2016,7 +2015,7 @@ std::string EvalOp::InputChainToStringShort(const std::vector<Input>& inputChain
     {
         if (InputA(input))
         {
-            if (InputLeft(input)) currChar = "L";
+            if (InputLeft(input)) currChar = "";
             else if (InputRight(input)) currChar = "R";
             else currChar = "A";
         }
@@ -2478,7 +2477,7 @@ void EvalOp::PrintGameState(const GameState& state, const EvalState& eval, const
 
 unsigned int EvalOp::GetBizHawkMovieFrameLen(const GameState& state)
 {
-    const auto filename = FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(state.level) + L".txt";
+    const auto filename = FileUtil::ResultsDir() + "Input Log_" + std::to_string(state.level) + ".txt";
     std::ifstream inFile;
     inFile.open(filename);
 
@@ -2503,10 +2502,10 @@ unsigned int EvalOp::GetBizHawkMovieFrameLen(const GameState& state)
 
 std::vector<Input> EvalOp::BizHawkMovieToInputChain(unsigned int level)
 {
-    return BizHawkMovieToInputChain(FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(level) + L".txt");
+    return BizHawkMovieToInputChain(FileUtil::ResultsDir() + "Input Log_" + std::to_string(level) + ".txt");
 }
 
-std::vector<Input> EvalOp::BizHawkMovieToInputChain(const std::wstring& filename)
+std::vector<Input> EvalOp::BizHawkMovieToInputChain(const std::string& filename)
 {
     std::vector<Input> inputChain;
 
@@ -2551,7 +2550,7 @@ void EvalOp::OutputBizHawkMovie(const GameState& state, const EvalState& eval, c
 {
     std::lock_guard<std::mutex> lock(eval.sharedState->dataSentry);
 
-    const auto writeFile = [&](const std::wstring& filename) {
+    const auto writeFile = [&](const std::string& filename) {
         FileUtil::ClearFile(filename);
 
         std::ofstream outFile;
@@ -2565,7 +2564,7 @@ void EvalOp::OutputBizHawkMovie(const GameState& state, const EvalState& eval, c
             outFile << "|..|";
             outFile << (InputUp(input) ? "U" : ".");
             outFile << (InputDown(input) ? "D" : ".");
-            outFile << (InputLeft(input) ? "L" : ".");
+            outFile << (InputLeft(input) ? "" : ".");
             outFile << (InputRight(input) ? "R" : ".");
             outFile << (InputStart(input) ? "S" : ".");
             outFile << (InputSelect(input) ? "s" : ".");
@@ -2579,25 +2578,25 @@ void EvalOp::OutputBizHawkMovie(const GameState& state, const EvalState& eval, c
         outFile.close();
     };
     
-    const auto levelFilename = FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(state.level) + L".txt";
-    const auto debugFilename = FileUtil::ResultsDir() + L"Input Log_debug.txt";
-    const auto levelFrameFilename = FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(state.level)
-                                    + L"_" + std::to_wstring(state._frame - eval.startFrame) + L".txt";
+    const auto levelFilename = FileUtil::ResultsDir() + "Input Log_" + std::to_string(state.level) + ".txt";
+    const auto debugFilename = FileUtil::ResultsDir() + "Input Log_debug.txt";
+    const auto levelFrameFilename = FileUtil::ResultsDir() + "Input Log_" + std::to_string(state.level)
+                                    + "_" + std::to_string(state._frame - eval.startFrame) + ".txt";
 
-    const auto levelFrameHitsDirectory = FileUtil::PartialsDir() + LR"(\Level )" + std::to_wstring(state.level) + L" "
-                                         + (eval.skipToDepth == 0 ? L"" : L"skips_")
+    const auto levelFrameHitsDirectory = FileUtil::PartialsDir() + "(\Level )" + std::to_string(state.level) + " "
+                                         + (eval.skipToDepth == 0 ? "" : "skips_")
                                          + eval.bounceMask
-                                         + (eval.includeBumpOptions ? L"_bumps" : L"") + (eval.manipulateEnemies ? L"_manips" : L"")
-                                         + (eval.launchDelayRange > 0 ? L"_delay" + std::to_wstring(eval.launchDelayRange) : L"")
-                                         + (eval.ensurePowerupByDepth == 0 ? L"_powerupanywhere" : L"");
-    const auto levelFrameHitsFilename = levelFrameHitsDirectory + LR"(\Input Log_)" + std::to_wstring(state.level)
-                                        + L"_" + std::to_wstring(state._frame - eval.startFrame)
-                                        + L"_" + std::to_wstring(eval.sharedState->bestBlockHitCount) + L"_hits"
-                                        + (eval.sharedState->bestBlockHitCount == 0 ? L"_COMPLETE" : L"" ) + L".txt";
+                                         + (eval.includeBumpOptions ? "_bumps" : "") + (eval.manipulateEnemies ? "_manips" : "")
+                                         + (eval.launchDelayRange > 0 ? "_delay" + std::to_string(eval.launchDelayRange) : "")
+                                         + (eval.ensurePowerupByDepth == 0 ? "_powerupanywhere" : "");
+    const auto levelFrameHitsFilename = levelFrameHitsDirectory + "(\Input Log_)" + std::to_string(state.level)
+                                        + "_" + std::to_string(state._frame - eval.startFrame)
+                                        + "_" + std::to_string(eval.sharedState->bestBlockHitCount) + "_hits"
+                                        + (eval.sharedState->bestBlockHitCount == 0 ? "_COMPLETE" : "" ) + ".txt";
     
-    const auto scoreId = L"score" + std::to_wstring(ScoreToId(state.score));
-    const auto scoreVarFilename = FileUtil::ScoreVarDir() + L"Input Log_" + std::to_wstring(state.level)
-                                  + L"_" + scoreId + L".txt";
+    const auto scoreId = "score" + std::to_string(ScoreToId(state.score));
+    const auto scoreVarFilename = FileUtil::ScoreVarDir() + "Input Log_" + std::to_string(state.level)
+                                  + "_" + scoreId + ".txt";
 
     if (mode == OutputMode::Debug)
     {
@@ -2622,7 +2621,7 @@ void EvalOp::OutputBizHawkMovie(const GameState& state, const EvalState& eval, c
 
 void EvalOp::GenerateAllScoreVariants(const unsigned int level, const unsigned int defaultScore, const bool printResults)
 {
-    const auto inputFilename = FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(level) + L".txt";
+    const auto inputFilename = FileUtil::ResultsDir() + "Input Log_" + std::to_string(level) + ".txt";
     const auto baseInputChain = BizHawkMovieToInputChain(inputFilename);
 
     EvalState eval;
@@ -3054,7 +3053,7 @@ void EvalOp::CombineMovieFiles(const std::vector<LevelParams>& defaultParams)
         GenerateAllScoreVariants(i, defaultParams[i].startingScore, false);
     }
 
-    const auto outputFilename = FileUtil::ResultsDir() + L"Input Log_Combined.txt";
+    const auto outputFilename = FileUtil::ResultsDir() + "Input Log_Combined.txt";
     FileUtil::ClearFile(outputFilename);
 
     std::ofstream outFile;
@@ -3081,10 +3080,10 @@ void EvalOp::CombineMovieFiles(const std::vector<LevelParams>& defaultParams)
     auto prevEndingScore = 0;
     for (int i = 1; i <= 36; i++)
     {
-        const auto basicInputFilename = FileUtil::ResultsDir() + L"Input Log_" + std::to_wstring(i) + L".txt";
+        const auto basicInputFilename = FileUtil::ResultsDir() + "Input Log_" + std::to_string(i) + ".txt";
         const auto scoreId = ScoreToId(prevEndingScore);
-        const auto scoreIdStr = L"score" + std::to_wstring(scoreId);
-        const auto scoreSpecificFilename = FileUtil::ScoreVarDir() + L"Input Log_" + std::to_wstring(i) + L"_" + scoreIdStr + L".txt";
+        const auto scoreIdStr = "score" + std::to_string(scoreId);
+        const auto scoreSpecificFilename = FileUtil::ScoreVarDir() + "Input Log_" + std::to_string(i) + "_" + scoreIdStr + ".txt";
 
         auto inputFilename = scoreSpecificFilename;
         auto inputChain = BizHawkMovieToInputChain(scoreSpecificFilename);

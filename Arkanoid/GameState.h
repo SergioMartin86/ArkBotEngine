@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GameConsts.h>
-
+#include <cstdint>
 #include <functional>
 
 struct Point

@@ -421,10 +421,10 @@ namespace
         std::vector<Input> inputs;
         inputs.reserve(movieLen);
 
-        const auto inputPath = FileUtil::UnitTestDir() + L"TestInput.txt";
+        const auto inputPath = FileUtil::UnitTestDir() + "TestInput.txt";
         if (!std::filesystem::exists(inputPath))
         {
-            wprintf(L"\nError: Couldn't find unit test input file %s.\n", inputPath.c_str());
+            printf("\nError: Couldn't find unit test input file %s.\n", inputPath.c_str());
             exit(1);
         }
 
@@ -445,11 +445,11 @@ namespace
             }
         }
 
-        const auto dataPath = FileUtil::UnitTestDir() + L"TestData.txt";
+        const auto dataPath = FileUtil::UnitTestDir() + "TestData.txt";
         std::ifstream dataFile(dataPath);
         if (!std::filesystem::exists(dataPath))
         {
-            wprintf(L"\nError: Couldn't find unit test input file %s.\n", dataPath.c_str());
+            printf("\nError: Couldn't find unit test input file %s.\n", dataPath.c_str());
             exit(1);
         }
 
@@ -502,7 +502,7 @@ namespace
         std::vector<Input> inputs;
         inputs.reserve(movieLen);
 
-        auto inputFilename = FileUtil::UnitTestDir() + L"TestInputLevel" + std::to_wstring(level) + L"Special.txt";
+        auto inputFilename = FileUtil::UnitTestDir() + std::string("TestInputLevel") + std::to_string(level) + std::string("Special.txt");
         std::ifstream inputFile(inputFilename);
         std::string inputLine;
 
@@ -520,7 +520,7 @@ namespace
             }
         }
 
-        auto dataFilename = FileUtil::UnitTestDir() + L"TestDataLevel" + std::to_wstring(level) + L"Special.txt";
+        auto dataFilename = FileUtil::UnitTestDir() + "TestDataLevel" + std::to_string(level) + "Special.txt";
         std::ifstream dataFile(dataFilename);
         std::string dataLine;
         std::getline(dataFile, dataLine);

@@ -136,10 +136,10 @@ struct EvalState
     bool testAllScoreVariations = false;
     bool noConditions = false;
     unsigned int timeLimit = 0;
-    std::chrono::steady_clock::time_point startTime;
+    std::chrono::high_resolution_clock::time_point startTime;
     unsigned int startFrame = 0;
     unsigned int testSinglePaddlePos = 0;
-    std::wstring bounceMask = L"1=1";
+    std::string bounceMask = "1=1";
     bool manipulateEnemies = false;
     bool allPowerupCollectionOptions = false;
     bool useBounceTableLookups = false;
@@ -200,7 +200,7 @@ public:
 
     static unsigned int GetBizHawkMovieFrameLen(const GameState& state);
     static void CombineMovieFiles(const std::vector<LevelParams>& defaultParams);
-    static std::vector<Input> BizHawkMovieToInputChain(const std::wstring& filename);
+    static std::vector<Input> BizHawkMovieToInputChain(const std::string& filename);
     static std::vector<Input> BizHawkMovieToInputChain(unsigned int level);
     static void OutputBizHawkMovie(const GameState& state, const EvalState& eval, OutputMode mode = OutputMode::Normal);
     static void GenerateAllScoreVariants(unsigned int level, unsigned int defaultScore, bool printResults);
