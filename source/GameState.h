@@ -211,8 +211,6 @@ struct GameState
     // Simulation-specific data - not used by the actual game logic.
     unsigned int _frame = 0;
     Input _pendingInput;
-    std::vector<Input> inputChain;
-    std::function<void(const GameState&)> _OnFrameAdvance = [](const GameState&) {};
     int _justMovedEnemy = -1;
     unsigned int _enemyMysteryInput = 0x77;
     unsigned int _enemyMoveOptions = 0;

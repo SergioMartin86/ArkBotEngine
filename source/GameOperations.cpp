@@ -14,7 +14,6 @@ void GameOp::Init(GameState& state)
     // Stuff that gets initialized once.
     state._frame = 0;
     state.score = 0;
-    state.inputChain.reserve(1200);
     state.bossHits = 0;
 
     // These values are in the 0xff region that doesn't get cleared during init.
@@ -26,7 +25,7 @@ void GameOp::Init(GameState& state)
     }
 
     // TODO do this at the appropriate op state transition instead of during init.
-    AdvanceToLevel(state, 1);
+    //AdvanceToLevel(state, 1);
 }
 
 void GameOp::AdvanceToLevel(GameState& state, const unsigned int level)
@@ -55,7 +54,7 @@ void GameOp::AdvanceToLevel(GameState& state, const unsigned int level)
 
     for (auto&& ball : state.ball)
     {
-        ball.pos = { 0, 0 };
+        ball.pos = { 0, 240 };
         ball.vel = { 0, 0 };
         ball.vSign = { 1, 1 };
         ball.angle = Angle::Steep;
@@ -104,21 +103,6 @@ void GameOp::ExecuteInput(GameState& state, const Input& input)
     AdvanceFrame(state);
 }
 
-void GameOp::ExecuteInput(GameState& state, const Input& input, const unsigned int count)
-{
-    for (unsigned int i = 0; i < count; i++)
-    {
-        ExecuteInput(state, input);
-    }
-}
-
-void GameOp::ExecuteInputChain(GameState& state, const std::vector<Input>& inputChain)
-{
-    for (const auto& input : inputChain)
-    {
-        ExecuteInput(state, input);
-    }
-}
 
 void GameOp::SetInput(GameState& state, const Input& input)
 {
@@ -132,7 +116,6 @@ void GameOp::AdvanceFrame(GameState& state)
     state._enemyMysteryInput = 0x77;
 
     state._frame++;
-    state.inputChain.emplace_back(state._pendingInput);
 
     RefreshMiscState(state);
     ProcessInput(state, state._pendingInput);
@@ -147,8 +130,6 @@ void GameOp::AdvanceFrame(GameState& state)
     UpdateActiveBalls(state);
     CheckPowerupCanBeCollected(state);
     if (_SimulateEnemies(state)) UpdateTimers(state);
-
-    state._OnFrameAdvance(state);
 }
 
 void GameOp::LoadLevel(GameState& state, unsigned int level)
